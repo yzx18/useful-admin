@@ -1,6 +1,8 @@
 package cn.poile.ucs.auth.controller;
 
 import cn.poile.ucs.auth.vo.UserDetailImpl;
+import com.yzx.model.AjaxResult;
+import com.yzx.model.LoginRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,14 +17,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 /**
  * @author: yaohw
  * @create: 2019-09-25 16:49
  **/
-@Controller
+@RestController
 @Log4j2
+@RequestMapping("auth")
 public class AuthenticationController {
 
     @Autowired
@@ -33,6 +37,21 @@ public class AuthenticationController {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @PostMapping("/user/login")
+    public AjaxResult login(@RequestBody(required = false) LoginRequest loginRequest, HttpServletRequest request) {
+        System.out.println(loginRequest);
+        if (loginRequest == null) {
+            return AjaxResult.error("参数错误");
+        }
+        //
+        return AjaxResult.error("cuowu1");
+    }
+
+    @GetMapping("/demo2")
+    public String demo() {
+        return "demo";
+    }
 
     /**
      * 更新用户信息时更新redis中的用户信息
@@ -46,15 +65,15 @@ public class AuthenticationController {
             Authentication userAuthentication = auth2Authentication.getUserAuthentication();
             OAuth2Authentication newOAuth2Authentication = null;
             if (userAuthentication instanceof UsernamePasswordAuthenticationToken) {
-                UserDetailImpl userDetails = (UserDetailImpl)userDetailsService.loadUserByUsername("yaohw");
+                UserDetailImpl userDetails = (UserDetailImpl) userDetailsService.loadUserByUsername("yaohw");
                 userDetails.setUsername("yaohw2");
                 userDetails.setTest("test333");
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
-                newOAuth2Authentication= new OAuth2Authentication(auth2Authentication.getOAuth2Request(),usernamePasswordAuthenticationToken);
+                newOAuth2Authentication = new OAuth2Authentication(auth2Authentication.getOAuth2Request(), usernamePasswordAuthenticationToken);
             }
             OAuth2AccessToken accessToken = tokenStore.getAccessToken(auth2Authentication);
             if (newOAuth2Authentication != null) {
-                tokenStore.storeAccessToken(accessToken,newOAuth2Authentication);
+                tokenStore.storeAccessToken(accessToken, newOAuth2Authentication);
             }
         }
         return "ok";
@@ -62,8 +81,8 @@ public class AuthenticationController {
 
     @GetMapping("/user")
     public @ResponseBody Object userInfo(Principal user) {
-        log.info("user:{}",user);
-        return  user;
+        log.info("user:{}", user);
+        return user;
     }
 
     /**

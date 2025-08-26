@@ -54,7 +54,6 @@ public class MobileCodeTokenGranter extends AbstractTokenGranter {
         if (userAuth == null || !userAuth.isAuthenticated()) {
             throw new InvalidGrantException("Could not authenticate mobile: " + mobile);
         }
-
         OAuth2Request storedOAuth2Request = getRequestFactory().createOAuth2Request(client, tokenRequest);
         return new OAuth2Authentication(storedOAuth2Request, userAuth);
     }

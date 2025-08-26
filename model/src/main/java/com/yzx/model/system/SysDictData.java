@@ -1,0 +1,80 @@
+package com.yzx.model.system;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * @author Mr.Pan
+ * @program xz-framework-parent
+ * @description 数据字典实体类
+ * @date created in  2020-02-04 13:04
+ */
+@Data
+@TableName( "sys_dict_data")
+public class SysDictData implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    /** 字典编码 */
+    private Long dictCode;
+
+    /** 字典排序 */
+    private Long dictSort;
+
+    /** 字典标签 */
+    @NotBlank(message = "字典标签不能为空")
+    @Size(min = 0, max = 100, message = "字典标签长度不能超过100个字符")
+    private String dictLabel;
+
+    /** 字典键值 */
+    @NotBlank(message = "字典键值不能为空")
+    @Size(min = 0, max = 100, message = "字典键值长度不能超过100个字符")
+    private String dictValue;
+
+    /** 字典类型 */
+    @NotBlank(message = "字典类型不能为空")
+    @Size(min = 0, max = 100, message = "字典类型长度不能超过100个字符")
+    private String dictType;
+
+    /** 样式属性（其他样式扩展） */
+    @Size(min = 0, max = 100, message = "样式属性长度不能超过100个字符")
+    private String cssClass;
+
+    /** 表格字典样式 */
+    private String listClass;
+
+    /** 是否默认（Y是 N否） */
+    private String isDefault;
+
+    /** 状态（0正常 1停用） */
+    private String status;
+
+    /**
+     * 创建者
+     */
+    private String createBy;
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    /**
+     * 更新者
+     */
+    private String updateBy;
+
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
+
+    private String remark;
+}

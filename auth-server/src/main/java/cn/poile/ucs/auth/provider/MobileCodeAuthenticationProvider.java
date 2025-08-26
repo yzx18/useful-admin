@@ -2,7 +2,7 @@ package cn.poile.ucs.auth.provider;
 
 import cn.poile.ucs.auth.Token.MobileCodeAuthenticationToken;
 import cn.poile.ucs.auth.constant.RedisConstant;
-import cn.poile.ucs.auth.service.UserDetailsServiceImpl;
+import cn.poile.ucs.auth.security.UserDetailsServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
@@ -70,7 +70,7 @@ public class MobileCodeAuthenticationProvider implements AuthenticationProvider,
         }
         check(user);
         MobileCodeAuthenticationToken authenticationToken = new MobileCodeAuthenticationToken(user, code, user.getAuthorities());
-        authenticationToken.setDetails(authenticationToken.getDetails());
+        authenticationToken.setDetails(user);
         return authenticationToken;
     }
 

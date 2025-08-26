@@ -1,0 +1,21 @@
+eureka:
+  client:
+    serviceUrl:
+      #配置服务中心(可配置多个,用逗号隔开)
+      defaultZone: http://admin:admin@localhost:9000/eureka/
+      logging:
+        level:
+          org.springframework.cloud.gateway: DEBUG
+server:
+  port: 9100
+spring:
+  application:
+    name: oauth2-gateway
+  cloud:
+    gateway:
+      routes:
+       - id: auth-server
+         uri: http://localhost:8001
+         predicates:
+           - Path=/auth/**
+
