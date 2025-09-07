@@ -8,12 +8,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author: Mr.Pan
- * @program: xz-framework-parent
- * @description:  CommonTree树结构实体类
- * @create: 2020-02-03 12:18
- */
 @Data
 public class CommonTree implements Serializable {
 

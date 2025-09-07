@@ -1,6 +1,10 @@
 package cn.poile.ucs.auth.security;
 
+import cn.poile.ucs.auth.mapper.BaseAuthMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yzx.model.ucenter.BaseAuth;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @className: PhoneUserDetailService
@@ -9,9 +13,15 @@ import com.yzx.model.ucenter.BaseAuth;
  * @Version: 1.0
  * @description:
  */
-public class PhoneUserDetailService  extends BaseUserDetails{
+@Component
+public class PhoneUserDetailService extends BaseUserDetails {
+    @Autowired
+    private
+    BaseAuthMapper baseAuthMapper;
+
     @Override
-    protected BaseAuth getBaseAuth(String username) {
-        return null;
+    protected BaseAuth getBaseAuth(String phone) {
+        BaseAuth baseAuth = baseAuthMapper.selectOne(new LambdaQueryWrapper<BaseAuth>().eq(BaseAuth::getPhoneNumber, phone));
+        return baseAuth;
     }
 }

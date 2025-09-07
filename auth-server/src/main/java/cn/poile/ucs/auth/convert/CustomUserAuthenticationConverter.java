@@ -1,7 +1,7 @@
 package cn.poile.ucs.auth.convert;
 
-import cn.poile.ucs.auth.security.UserDetailsServiceImpl;
-import cn.poile.ucs.auth.vo.UserDetailImpl;
+import cn.poile.ucs.auth.security.UserNameUserDetailService;
+import com.yzx.model.ucenter.BaseUserDetail;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class CustomUserAuthenticationConverter extends DefaultUserAuthentication
     protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    UserNameUserDetailService userDetailsService;
 
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
@@ -32,19 +32,24 @@ public class CustomUserAuthenticationConverter extends DefaultUserAuthentication
         LinkedHashMap<String, Object> response = new LinkedHashMap<String, Object>();
         String name = authentication.getName();
         Object principal = authentication.getPrincipal();
-        UserDetailImpl baseUserDetail = null;
-        if (principal instanceof UserDetailImpl) {
-            baseUserDetail = (UserDetailImpl) principal;
+        BaseUserDetail baseUserDetail = null;
+        if (principal instanceof BaseUserDetail) {
+            baseUserDetail = (BaseUserDetail) principal;
         } else {
             UserDetails user = userDetailsService.loadUserByUsername(name);
-            baseUserDetail = (UserDetailImpl) user;
+            baseUserDetail = (BaseUserDetail) user;
         }
+
         //TODO 此处根据用户的类别进行处理，让不同的用户携带不通的信息
-        response.put("userName", baseUserDetail.getUsername());
-        response.put("mobile", baseUserDetail.getMobile());
-        response.put("id", baseUserDetail.getId());
-        response.put("text", baseUserDetail.getTest());
-        response.put("user_details", baseUserDetail);
+        response.put("userName", baseUserDetail.getBaseAuth().getUserName());
+        response.put("nickName", baseUserDetail.getBaseUser().getNickName());
+        response.put("sex", baseUserDetail.getBaseUser().getSex());
+        response.put("phone", baseUserDetail.getBaseAuth().getPhoneNumber());
+        response.put("id", baseUserDetail.getBaseUser().getUserId());
+        response.put("isServant", baseUserDetail.getBaseUser().getIsServant());
+        response.put("avatar", baseUserDetail.getBaseUser().getAvatar());
+        response.put("ID", baseUserDetail.getBaseUser().getIdNumber());
+        response.put("permissions", baseUserDetail.getPermissions());
         if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
             response.put("authorities", AuthorityUtils.authorityListToSet(authentication.getAuthorities()));
         }

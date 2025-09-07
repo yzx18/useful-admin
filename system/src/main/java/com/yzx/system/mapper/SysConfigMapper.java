@@ -3,6 +3,7 @@ package com.yzx.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yzx.model.system.SysConfig;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * 
  * @author ruoyi
  */
+@Mapper
 public interface SysConfigMapper extends BaseMapper<SysConfig>
 {
     /**

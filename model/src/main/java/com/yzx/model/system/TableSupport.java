@@ -1,7 +1,8 @@
 package com.yzx.model.system;
 
-import com.ruoyi.common.core.text.Convert;
-import com.ruoyi.common.utils.ServletUtils;
+
+import com.yzx.model.Convert;
+import com.yzx.model.utils.ServletUtils;
 
 /**
  * 表格数据处理

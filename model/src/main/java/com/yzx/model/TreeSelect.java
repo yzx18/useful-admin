@@ -3,6 +3,7 @@ package com.yzx.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yzx.model.constant.UserConstants;
 import com.yzx.model.system.SysMenu;
+import com.yzx.model.system.SysMenuTree;
 import com.yzx.model.system.SysUserProp;
 
 
@@ -45,11 +46,14 @@ public class TreeSelect implements Serializable
         this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
-    public TreeSelect(SysMenu menu)
+    public TreeSelect(SysMenuTree menu)
     {
         this.id = menu.getMenuId();
         this.label = menu.getMenuName();
         this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(SysMenu sysMenu) {
     }
 
     public Long getId()

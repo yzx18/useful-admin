@@ -2,10 +2,8 @@ package com.yzx.system.controller;
 
 
 import com.yzx.model.AjaxResult;
-import com.yzx.model.StringUtils;
 import com.yzx.model.annotation.Log;
 import com.yzx.model.enums.BusinessType;
-import com.yzx.model.pol.ExcelUtil;
 import com.yzx.model.system.SysRole;
 import com.yzx.model.system.SysUser;
 import com.yzx.model.system.TableDataInfo;
@@ -14,12 +12,7 @@ import com.yzx.system.service.ISysRoleService;
 import com.yzx.system.service.ISysUserService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,32 +48,32 @@ public class SysUserController extends BaseController
         return getDataTable(list);
     }
 
-    @Log(title = "用户管理", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SysUser user)
-    {
-        List<SysUser> list = userService.selectUserList(user);
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        util.exportExcel(response, list, "用户数据");
-    }
-
-    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
-    @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
-    {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        List<SysUser> userList = util.importExcel(file.getInputStream());
-        String operName = getUsername();
-        String message = userService.importUser(userList, updateSupport, operName);
-        return success(message);
-    }
-
-    @PostMapping("/importTemplate")
-    public void importTemplate(HttpServletResponse response)
-    {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        util.importTemplateExcel(response, "用户数据");
-    }
+//    @Log(title = "用户管理", businessType = BusinessType.EXPORT)
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, SysUser user)
+//    {
+//        List<SysUser> list = userService.selectUserList(user);
+//        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+//        util.exportExcel(response, list, "用户数据");
+//    }
+//
+//    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+//    @PostMapping("/importData")
+//    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+//    {
+//        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+//        List<SysUser> userList = util.importExcel(file.getInputStream());
+//        String operName = getUsername();
+//        String message = userService.importUser(userList, updateSupport, operName);
+//        return success(message);
+//    }
+//
+//    @PostMapping("/importTemplate")
+//    public void importTemplate(HttpServletResponse response)
+//    {
+//        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+//        util.importTemplateExcel(response, "用户数据");
+//    }
 
 //    /**
 //     * 根据用户编号获取详细信息

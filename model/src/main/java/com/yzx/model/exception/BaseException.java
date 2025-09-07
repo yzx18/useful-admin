@@ -1,7 +1,8 @@
 package com.yzx.model.exception;
 
-import com.ruoyi.common.utils.MessageUtils;
-import com.ruoyi.common.utils.StringUtils;
+
+import com.yzx.model.StringUtils;
+import com.yzx.model.utils.MessageUtils;
 
 /**
  * 基础异常

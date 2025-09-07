@@ -4,7 +4,6 @@ package com.yzx.system.controller;
 import com.yzx.model.AjaxResult;
 import com.yzx.model.annotation.Log;
 import com.yzx.model.enums.BusinessType;
-import com.yzx.model.pol.ExcelUtil;
 import com.yzx.model.system.SysConfig;
 import com.yzx.model.system.TableDataInfo;
 import com.yzx.system.service.ISysConfigService;
@@ -39,14 +38,14 @@ public class SysConfigController extends BaseController
         return getDataTable(list);
     }
 
-    @Log(title = "参数管理", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SysConfig config)
-    {
-        List<SysConfig> list = configService.selectConfigList(config);
-        ExcelUtil<SysConfig> util = new ExcelUtil<SysConfig>(SysConfig.class);
-        util.exportExcel(response, list, "参数数据");
-    }
+//    @Log(title = "参数管理", businessType = BusinessType.EXPORT)
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, SysConfig config)
+//    {
+//        List<SysConfig> list = configService.selectConfigList(config);
+//        ExcelUtil<SysConfig> util = new ExcelUtil<SysConfig>(SysConfig.class);
+//        util.exportExcel(response, list, "参数数据");
+//    }
 
     /**
      * 根据参数编号获取详细信息

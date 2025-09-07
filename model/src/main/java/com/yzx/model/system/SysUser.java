@@ -2,6 +2,8 @@ package com.yzx.model.system;
 
 
 import com.yzx.model.annotation.Excel;
+import com.yzx.model.annotation.Excels;
+import com.yzx.model.annotation.Xss;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -66,7 +68,7 @@ public class SysUser extends BaseEntity
     private String loginIp;
 
     /** 最后登录时间 */
-    @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Type.EXPORT)
+    @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Excel.Type.EXPORT)
     private Date loginDate;
 
     /** 部门对象 */

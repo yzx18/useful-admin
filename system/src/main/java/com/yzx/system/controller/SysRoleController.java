@@ -1,11 +1,8 @@
 package com.yzx.system.controller;
 
 import com.yzx.model.AjaxResult;
-import com.yzx.model.LoginUser;
-import com.yzx.model.StringUtils;
 import com.yzx.model.annotation.Log;
 import com.yzx.model.enums.BusinessType;
-import com.yzx.model.pol.ExcelUtil;
 import com.yzx.model.system.SysRole;
 import com.yzx.model.system.SysUser;
 import com.yzx.model.system.SysUserRole;
@@ -13,7 +10,6 @@ import com.yzx.model.system.TableDataInfo;
 import com.yzx.system.service.ISysRoleService;
 import com.yzx.system.service.ISysUserService;
 import com.yzx.system.service.impl.SysPermissionService;
-import com.yzx.system.service.impl.SysPermissionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.token.TokenService;
@@ -35,8 +31,8 @@ public class SysRoleController extends BaseController
     @Autowired
     private ISysRoleService roleService;
 
-    @Autowired
-    private TokenService tokenService;
+//    @Autowired
+//    private TokenService tokenService;
 
     @Autowired
     private SysPermissionService permissionService;
@@ -56,15 +52,15 @@ public class SysRoleController extends BaseController
         return getDataTable(list);
     }
 
-    @Log(title = "角色管理", businessType = BusinessType.EXPORT)
-    @PreAuthorize("@ss.hasPermi('system:role:export')")
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SysRole role)
-    {
-        List<SysRole> list = roleService.selectRoleList(role);
-        ExcelUtil<SysRole> util = new ExcelUtil<SysRole>(SysRole.class);
-        util.exportExcel(response, list, "角色数据");
-    }
+//    @Log(title = "角色管理", businessType = BusinessType.EXPORT)
+//    @PreAuthorize("@ss.hasPermi('system:role:export')")
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, SysRole role)
+//    {
+//        List<SysRole> list = roleService.selectRoleList(role);
+//        ExcelUtil<SysRole> util = new ExcelUtil<SysRole>(SysRole.class);
+//        util.exportExcel(response, list, "角色数据");
+//    }
 
     /**
      * 根据角色编号获取详细信息

@@ -111,7 +111,6 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED); // 401 未授权
         response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
-
         RestErrorResponse error = new RestErrorResponse(message);
         byte[] body = JSON.toJSONString(error).getBytes(StandardCharsets.UTF_8);
         DataBuffer buffer = response.bufferFactory().wrap(body);

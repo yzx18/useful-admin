@@ -16,7 +16,7 @@ import java.util.Set;
  * @create: 2020-02-13 14:46
  **/
 @RestController
-@RequestMapping("/permission")
+@RequestMapping("/system/permission")
 public class SysPermissionController {
 
     @Autowired

@@ -1,48 +1,90 @@
 package cn.poile.ucs.auth.convert;
 
-import cn.poile.ucs.auth.security.UserDetailsServiceImpl;
-import cn.poile.ucs.auth.vo.UserDetailImpl;
+import cn.poile.ucs.auth.security.UserNameUserDetailService;
+import com.yzx.model.ucenter.BaseUserDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.bootstrap.encrypt.KeyProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.security.KeyPair;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
 /**
- * Created by fp295 on 2018/4/16.
- * 自定义JwtAccessToken转换器 这个类可以增强令牌
+ * @className: BaseUserDetails
+ * @author: yzx
+ * @date: 2025/8/21 6:24
+ * @Version: 1.0
+ * @description: 自定义JwtAccessToken转换器 这个类可以增强令牌
  */
 @Component
 @Slf4j
 public class JwtAccessToken extends JwtAccessTokenConverter {
 
+    @Bean("keyProp")
+    public KeyProperties keyProperties() {
+        return new KeyProperties();
+    }
+
+    @Resource(name = "keyProp")
+    private KeyProperties keyProperties;
 
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private UserNameUserDetailService userNameUserDetailService;
+
+    @Autowired
+    private CustomUserAuthenticationConverter customUserAuthenticationConverter;
+
+    @PostConstruct
+    public void init() {
+
+        // 设置密钥对
+        KeyPair keyPair = new KeyStoreKeyFactory(
+                keyProperties.getKeyStore().getLocation(),
+                keyProperties.getKeyStore().getSecret().toCharArray())
+                .getKeyPair(keyProperties.getKeyStore().getAlias(),
+                        keyProperties.getKeyStore().getPassword().toCharArray());
+        this.setKeyPair(keyPair);
+        // 设置自定义的用户认证转换器
+        DefaultAccessTokenConverter tokenConverter = (DefaultAccessTokenConverter) getAccessTokenConverter();
+        tokenConverter.setUserTokenConverter(customUserAuthenticationConverter);
+    }
+
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken oAuth2AccessToken, OAuth2Authentication oAuth2Authentication) {
-        DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) oAuth2AccessToken;
+        String name = oAuth2Authentication.getName();
+        log.debug("jwt token name is :" + name);
 
-        // 获取现有附加信息（而不是创建新的）
-        Map<String, Object> map = token.getAdditionalInformation();
-        if (map == null) {
-            map = new LinkedHashMap<>();
-        }
-        // 添加/更新自定义信息
+        Map<String, Object> map = new LinkedHashMap<>();
         Object principal = oAuth2Authentication.getPrincipal();
-        if (principal instanceof UserDetailImpl) {
-            UserDetailImpl baseUserDetail = (UserDetailImpl) principal;
-            map.put("username", baseUserDetail.getUsername());
-            map.put("mobile", baseUserDetail.getMobile());
-            map.put("mobile1", "1111");
+        BaseUserDetail baseUserDetail = null;
+        if (principal instanceof BaseUserDetail) {
+            baseUserDetail = (BaseUserDetail) principal;
+        } else {
+            UserDetails user = userNameUserDetailService.loadUserByUsername(name);
+            baseUserDetail = (BaseUserDetail) user;
         }
+        log.debug("ba user detail :" + baseUserDetail);
+        DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) oAuth2AccessToken;
+        map.put("username", baseUserDetail.getBaseAuth().getUserName());
+//        map.put("mobile", baseUserDetail.getBaseAuth().getPhoneNumber());
+        map.put("u_id", baseUserDetail.getBaseUser().getUserId());
         token.setAdditionalInformation(map);
+        log.debug("oAuth2AccessToken==========>" + oAuth2AccessToken);
+
+        // 调用父类方法进行签名
         return super.enhance(token, oAuth2Authentication);
     }
 

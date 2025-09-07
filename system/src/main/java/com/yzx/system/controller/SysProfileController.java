@@ -2,18 +2,12 @@ package com.yzx.system.controller;
 
 
 import com.yzx.model.AjaxResult;
-import com.yzx.model.LoginUser;
-import com.yzx.model.StringUtils;
-import com.yzx.model.annotation.Log;
-import com.yzx.model.enums.BusinessType;
-import com.yzx.model.utils.SecurityUtils;
+import com.yzx.model.ucenter.BaseUser;
 import com.yzx.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import com.yzx.model.system.SysUser;
-import java.util.Map;
 
 /**
  * 个人信息 业务处理
@@ -26,9 +20,9 @@ public class SysProfileController extends BaseController
 {
     @Autowired
     private ISysUserService userService;
-
-    @Autowired
-    private TokenService tokenService;
+//
+//    @Autowired
+//    private TokenService tokenService;
 
     /**
      * 个人信息
@@ -36,10 +30,9 @@ public class SysProfileController extends BaseController
     @GetMapping
     public AjaxResult profile()
     {
-        LoginUser loginUser = getLoginUser();
-        SysUser user = loginUser.getUser();
-        AjaxResult ajax = AjaxResult.success(user);
-        ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUsername()));
+        BaseUser loginUser = getLoginUser();
+        AjaxResult ajax = AjaxResult.success(loginUser);
+        ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUserName()));
 //        ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));
         return ajax;
     }

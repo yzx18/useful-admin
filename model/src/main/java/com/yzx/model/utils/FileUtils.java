@@ -2,6 +2,7 @@ package com.yzx.model.utils;
 
 
 import com.yzx.model.StringUtils;
+import com.yzx.model.config.RuoYiConfig;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;

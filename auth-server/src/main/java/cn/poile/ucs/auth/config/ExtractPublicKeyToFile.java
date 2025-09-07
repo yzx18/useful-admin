@@ -7,7 +7,13 @@ import java.security.cert.Certificate;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
-
+/**
+ * @className: BaseUserDetails
+ * @author: yzx
+ * @date: 2025/8/21 6:24
+ * @Version: 1.0
+ * @description:
+ */
 public class ExtractPublicKeyToFile {
     public static void main(String[] args) {
         try {

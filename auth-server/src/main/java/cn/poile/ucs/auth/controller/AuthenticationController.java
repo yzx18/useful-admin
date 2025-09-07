@@ -1,148 +1,121 @@
 package cn.poile.ucs.auth.controller;
 
-import cn.poile.ucs.auth.vo.UserDetailImpl;
+import cn.poile.ucs.auth.service.AuthService;
+import com.yzx.apiclient.api.SystemApi;
 import com.yzx.model.AjaxResult;
 import com.yzx.model.LoginRequest;
+import com.yzx.model.constant.Constants;
+import com.yzx.model.enums.AuthCode;
+import com.yzx.model.exception.ExceptionCast;
+import com.yzx.model.ucenter.ext.AuthToken;
+import com.yzx.model.utils.Oauth2Util;
+import com.yzx.model.utils.ServletUtils;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
+import java.util.Objects;
+import java.util.Set;
 
 /**
- * @author: yaohw
- * @create: 2019-09-25 16:49
- **/
+ * @className: BaseUserDetails
+ * @author: yzx
+ * @date: 2025/8/21 6:24
+ * @Version: 1.0
+ * @description:
+ */
 @RestController
 @Log4j2
+@CrossOrigin
 @RequestMapping("auth")
 public class AuthenticationController {
 
     @Autowired
-    private ConsumerTokenServices consumerTokenServices;
-
+    SystemApi systemApi;
     @Autowired
-    private TokenStore tokenStore;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private AuthService authService;
 
     @PostMapping("/user/login")
-    public AjaxResult login(@RequestBody(required = false) LoginRequest loginRequest, HttpServletRequest request) {
+    public AjaxResult login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         System.out.println(loginRequest);
         if (loginRequest == null) {
-            return AjaxResult.error("参数错误");
+            ExceptionCast.cast(AuthCode.AUTH_LOGIN_ERROR);
         }
-        //
-        return AjaxResult.error("cuowu1");
-    }
-
-    @GetMapping("/demo2")
-    public String demo() {
-        return "demo";
-    }
-
-    /**
-     * 更新用户信息时更新redis中的用户信息
-     * @param authentication
-     * @return java.lang.String
-     */
-    @GetMapping("/update")
-    public @ResponseBody String updateCacheUserInfo(Authentication authentication) {
-        if (authentication instanceof OAuth2Authentication) {
-            OAuth2Authentication auth2Authentication = (OAuth2Authentication) authentication;
-            Authentication userAuthentication = auth2Authentication.getUserAuthentication();
-            OAuth2Authentication newOAuth2Authentication = null;
-            if (userAuthentication instanceof UsernamePasswordAuthenticationToken) {
-                UserDetailImpl userDetails = (UserDetailImpl) userDetailsService.loadUserByUsername("yaohw");
-                userDetails.setUsername("yaohw2");
-                userDetails.setTest("test333");
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
-                newOAuth2Authentication = new OAuth2Authentication(auth2Authentication.getOAuth2Request(), usernamePasswordAuthenticationToken);
-            }
-            OAuth2AccessToken accessToken = tokenStore.getAccessToken(auth2Authentication);
-            if (newOAuth2Authentication != null) {
-                tokenStore.storeAccessToken(accessToken, newOAuth2Authentication);
-            }
+        LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        switch (loginRequest.getGrantType()) {
+            case Constants.LOGIN_TYPE_PWD:
+                if (StringUtils.isEmpty(loginRequest.getMobile())) {
+                    ExceptionCast.cast(AuthCode.AUTH_MOBILE_NONE);
+                }
+                if (StringUtils.isEmpty(loginRequest.getPassword())) {
+                    ExceptionCast.cast(AuthCode.AUTH_PASSWORD_NONE);
+                }
+                body.add("mobile", loginRequest.getMobile());
+                body.add("password", loginRequest.getPassword());
+                break;
+            case Constants.LOGIN_TYPE_PASSWORD:
+                if (StringUtils.isEmpty(loginRequest.getUsername())) {
+                    ExceptionCast.cast(AuthCode.AUTH_USERNAME_NONE);
+                }
+                if (StringUtils.isEmpty(loginRequest.getPassword())) {
+                    ExceptionCast.cast(AuthCode.AUTH_PASSWORD_NONE);
+                }
+                body.add("username", loginRequest.getUsername());
+                body.add("password", loginRequest.getPassword());
+                break;
+            case Constants.LOGIN_TYPE_SMS:
+                if (StringUtils.isEmpty(loginRequest.getMobile())) {
+                    ExceptionCast.cast(AuthCode.AUTH_MOBILE_NONE);
+                }
+                if (StringUtils.isEmpty(loginRequest.getVerifyCode())) {
+                    ExceptionCast.cast(AuthCode.AUTH_VERIFYCODE_NONE);
+                }
+                body.add("mobile", loginRequest.getMobile());
+                body.add("verifyCode", loginRequest.getVerifyCode());
+                break;
+            default:
+                ExceptionCast.cast(AuthCode.AUTH_LOGIN_ERROR);
         }
-        return "ok";
+        //body还可以加上需要携带的数据过去，比如菜单列表，menu列表，用于页面权限校验，或者也可以拿着身份令牌从别的接口中获取菜单列表，按钮列表等
+        body.add("grant_type", loginRequest.getGrantType());
+        //申请令牌
+        AuthToken authToken = authService.login(body, request);
+        //用户身份令牌
+        String accessToken = authToken.getAccessToken();
+        //取出用户身份令牌,将令牌存储到cookie
+        AjaxResult result = new AjaxResult();
+        result.put("code", 200);
+        result.put("message", "操作成功");
+        result.put("token", accessToken);
+        return result;
     }
 
-    @GetMapping("/user")
-    public @ResponseBody Object userInfo(Principal user) {
-        log.info("user:{}", user);
-        return user;
+    @GetMapping("/user/getInfo")
+    public AjaxResult getInfo() {
+        Oauth2Util.UserJwt userJwt = new Oauth2Util().getUserJwtFromHeader(ServletUtils.getRequest());
+
+        if (Objects.isNull(userJwt)) {
+            return AjaxResult.error("用户未登录");
+        }
+        // 角色集合
+        Set<String> roles = systemApi.getRolePermissionByUserId(userJwt.getId());
+        // 权限集合
+        Set<String> permissions = systemApi.getMenuPermissionByUserId(userJwt.getId());
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("user", userJwt);
+        ajax.put("roles", roles);
+        ajax.put("permissions", permissions);
+        return ajax;
     }
 
-    /**
-     * 退出时将token清空（使用RedisStore时就是删除掉对应缓存）
-     * @param authorization
-     * @return
-     */
-    @DeleteMapping("/logout")
-    public @ResponseBody String logout(@RequestHeader(value = "Authorization") String authorization) {
-        String accessToken = authorization.substring(OAuth2AccessToken.BEARER_TYPE.length()).trim();
-        consumerTokenServices.revokeToken(accessToken);
-        return "ok";
-    }
-
-    /**
-     * 不需要token访问测试
-     * @return
-     */
-    @GetMapping("/test/no_need_token")
-    public @ResponseBody String test() {
-        return "no_need_token";
-    }
-
-    /**
-     * 需要token访问接口测试
-     * @return
-     */
-    @GetMapping("/test/need_token")
-    public @ResponseBody String test2() {
-        return "need_token";
-    }
-
-    /**
-     * 需要需要管理员权限
-     * @return
-     */
-    @PreAuthorize("hasAuthority('admin')")
-    @GetMapping("/test/need_admin")
-    public @ResponseBody String admin() {
-        return "need_admin";
-    }
-
-    /**
-     * 认证页面
-     * @return ModelAndView
-     */
-    @GetMapping("/login")
-    public ModelAndView require() {
-        log.info("---认证页面---");
-        return new ModelAndView("ftl/login");
-    }
-
-    /**
-     * scope 控制测试,该方法只有配置有scope为sever2的客户端能访问，针对的是客户端
-     * @return
-     */
-    @GetMapping("/test/scope")
-    @PreAuthorize("#oauth2.hasScope('sever2')")
-    public @ResponseBody String test3() {
-        return "scope-test";
+    @GetMapping("/user/getRouters")
+    public AjaxResult getRouters() {
+        Oauth2Util.UserJwt userJwt = new Oauth2Util().getUserJwtFromHeader(ServletUtils.getRequest());
+        Long id = userJwt.getId();
+        return systemApi.getMenusTreeByUserId(id);
     }
 
 }

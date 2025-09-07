@@ -1,6 +1,7 @@
 package com.yzx.model.system;
 
-import com.ruoyi.common.utils.StringUtils;
+
+import com.yzx.model.StringUtils;
 
 /**
  * 分页数据

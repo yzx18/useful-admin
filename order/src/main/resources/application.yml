@@ -1,0 +1,6 @@
+encrypt:
+  key-store:
+    location: classpath:/xz.keystore
+    secret: xiaozuokeystore
+    alias: xzkey
+    password: xiaozuo

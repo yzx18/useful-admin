@@ -2,11 +2,13 @@ package com.yzx.model.ucenter;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.yzx.model.system.SysRole;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @program: xz-framework-parent-reversion
@@ -18,7 +20,7 @@ import java.util.Date;
 @Data
 @ToString
 @TableName("sys_user")
-public class BaseUser{
+public class BaseUser {
 
     /*** 用户id */
     private Long userId; // 表中存在user_id，无需注解
@@ -82,7 +84,8 @@ public class BaseUser{
     /** 角色组（表中无roleIds字段） */
     @TableField(exist = false)
     private Long[] roleIds;
-
+    @TableField(exist = false)
+    private List<SysRole> roles;
     /** 岗位组（表中无postIds字段） */
     @TableField(exist = false)
     private Long[] postIds;

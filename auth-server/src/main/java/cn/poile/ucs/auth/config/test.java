@@ -1,9 +1,6 @@
 package cn.poile.ucs.auth.config;
 
 import cn.poile.ucs.auth.mapper.BaseUserMapper;
-import cn.poile.ucs.auth.service.serviceimpl.BaseUserImpl;
-import cn.poile.ucs.auth.service.serviceimpl.BaseUserService;
-import com.yzx.model.ucenter.BaseUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

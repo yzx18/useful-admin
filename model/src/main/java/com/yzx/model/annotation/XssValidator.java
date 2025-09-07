@@ -1,6 +1,5 @@
 package com.yzx.model.annotation;
 
-import com.ruoyi.common.utils.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

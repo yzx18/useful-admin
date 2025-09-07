@@ -15,7 +15,7 @@ import java.util.Set;
  * @Version: 1.0
  * @description:
  */
-@FeignClient("system-sever")
+@FeignClient("system-server")
 public interface SystemApi {
     @GetMapping("/system/menu/getPermsByUserId/{userId}")
     AjaxResult selectPermsByUserId(@PathVariable(name = "userId") Long userId);

@@ -1,6 +1,5 @@
 package com.yzx.model.constant;
 
-import io.jsonwebtoken.Claims;
 
 import java.util.Locale;
 
@@ -12,34 +11,18 @@ import java.util.Locale;
 public class Constants
 {
     /**
+     * Zuul请求头TOKEN名称（不要有空格）
+     */
+    public static final String ZUUL_TOKEN_HEADER = "ZuulToken";
+    /**
+     * Zuul请求头TOKEN值
+     */
+    public static final String ZUUL_TOKEN_VALUE = "xz:zuul:123456";
+
+    /**
      * UTF-8 字符集
      */
     public static final String UTF8 = "UTF-8";
-
-    /**
-     * GBK 字符集
-     */
-    public static final String GBK = "GBK";
-
-    /**
-     * 系统语言
-     */
-    public static final Locale DEFAULT_LOCALE = Locale.SIMPLIFIED_CHINESE;
-
-    /**
-     * www主域
-     */
-    public static final String WWW = "www.";
-
-    /**
-     * http请求
-     */
-    public static final String HTTP = "http://";
-
-    /**
-     * https请求
-     */
-    public static final String HTTPS = "https://";
 
     /**
      * 通用成功标识
@@ -62,34 +45,19 @@ public class Constants
     public static final String LOGOUT = "Logout";
 
     /**
-     * 注册
-     */
-    public static final String REGISTER = "Register";
-
-    /**
      * 登录失败
      */
     public static final String LOGIN_FAIL = "Error";
 
     /**
-     * 所有权限标识
+     * 验证码 redis key
      */
-    public static final String ALL_PERMISSION = "*:*:*";
+    public static final String CAPTCHA_CODE_KEY = "captcha_codes:";
 
     /**
-     * 管理员角色权限标识
+     * 登录用户 redis key
      */
-    public static final String SUPER_ADMIN = "admin";
-
-    /**
-     * 角色权限分隔符
-     */
-    public static final String ROLE_DELIMETER = ",";
-
-    /**
-     * 权限标识分隔符
-     */
-    public static final String PERMISSION_DELIMETER = ",";
+    public static final String LOGIN_TOKEN_KEY = "login_tokens:";
 
     /**
      * 验证码有效期（分钟）
@@ -116,10 +84,6 @@ public class Constants
      */
     public static final String JWT_USERID = "userid";
 
-    /**
-     * 用户名称
-     */
-    public static final String JWT_USERNAME = Claims.SUBJECT;
 
     /**
      * 用户头像
@@ -142,33 +106,68 @@ public class Constants
     public static final String RESOURCE_PREFIX = "/profile";
 
     /**
-     * RMI 远程方法调用
+     * 手机号+密码登陆
      */
-    public static final String LOOKUP_RMI = "rmi:";
+    public static final String LOGIN_TYPE_PWD = "pwd";
 
     /**
-     * LDAP 远程方法调用
+     * 账户名+密码登陆
      */
-    public static final String LOOKUP_LDAP = "ldap:";
+    public static final String LOGIN_TYPE_PASSWORD = "password";
 
     /**
-     * LDAPS 远程方法调用
+     * 短信登陆
      */
-    public static final String LOOKUP_LDAPS = "ldaps:";
+    public static final String LOGIN_TYPE_SMS = "sms_code";
 
     /**
-     * 自动识别json对象白名单配置（仅允许解析的包名，范围越小越安全）
+     * redis短信验证码key值
      */
-    public static final String[] JSON_WHITELIST_STR = { "org.springframework", "com.ruoyi" };
+    public static final String SMS_CODE = "sms_code";
+
+    public static final String SYSTEM_VERSION = "system_version";
 
     /**
-     * 定时任务白名单配置（仅允许访问的包名，如其他需要可以自行添加）
+     * redis用户token信息key值
      */
-    public static final String[] JOB_WHITELIST_STR = { "com.ruoyi.quartz.task" };
+    public static final String USER_TOKEN = "user_token:";
+    /**
+     * www主域
+     */
+    public static final String WWW = "www.";
+    /**
+     * http请求
+     */
+    public static final String HTTP = "http://";
+    /**
+     * https请求
+     */
+    public static final String HTTPS = "https://";
+    /**
+     * 系统默认头像
+     **/
+    public static final String DEFAULT_AVATAR = "group1/M00/00/07/wKgMbV6_sfOAMXwpAALh3rMBV7o285.jpg";
+
+
+    public static final String DEVICE_STATUS_ONLINE = "ONLINE";
+
+
+    public static final String WMS_QUEUE = "wms_queue";
+
+    public static final String QUEUE_EXCHANGE = "wms_exchange";
+
+    public static final String WMS_ORDER_KEY = "wms_order";
 
     /**
-     * 定时任务违规的字符
+     * 二维码
      */
-    public static final String[] JOB_ERROR_STR = { "java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
-            "org.springframework", "org.apache", "com.ruoyi.common.utils.file", "com.ruoyi.common.config", "com.ruoyi.generator" };
+    public static final String SYS_CODE = "qrCode:";
+    /**
+     * 管理员角色权限标识
+     */
+    public static final String SUPER_ADMIN = "admin";
+    /**
+     * 所有权限标识
+     */
+    public static final String ALL_PERMISSION = "*:*:*";
 }

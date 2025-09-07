@@ -1,6 +1,7 @@
 package com.yzx.model.enums;
 
-import com.ruoyi.common.utils.DesensitizedUtil;
+
+import com.yzx.model.utils.DesensitizedUtil;
 
 import java.util.function.Function;
 
@@ -19,7 +20,7 @@ public enum DesensitizedType
     /**
      * 密码，全部字符都用*代替
      */
-    PASSWORD(DesensitizedUtil::password),
+//    PASSWORD(DesensitizedUtil::password),
 
     /**
      * 身份证，中间10位星号替换
