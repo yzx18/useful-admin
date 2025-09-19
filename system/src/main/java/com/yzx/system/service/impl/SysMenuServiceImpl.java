@@ -455,7 +455,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return String
      */
     public List<SysMenuDto> getChildPerms(List<SysMenuDto> list, int parentId) {
-        List<SysMenuDto> returnList = new ArrayList<SysMenuDto>();
+        List<SysMenuDto> returnList = new ArrayList();
         for (Iterator<SysMenuDto> iterator = list.iterator(); iterator.hasNext(); ) {
             SysMenuDto t = iterator.next();
             // 一、根据传入的某个父节点ID,遍历该父节点的所有子节点

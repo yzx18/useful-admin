@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * 文件存储表
  * </p>
  *
- * @author 翱翔
+ * @author yzx
  * @since 2025-03-11
  */
 @Data

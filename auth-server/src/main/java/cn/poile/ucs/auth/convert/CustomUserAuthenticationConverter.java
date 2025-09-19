@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * @author yzx
- * 自定义用户信息 oauth2默认是只有用户名 远程解系的时候可以直接拿来用
+ * 自定义用户信息 oauth2默认是只有用户名 远程解系的时候可以直接拿来用 注意不要过度暴露数据
  */
 @Component
 public class CustomUserAuthenticationConverter extends DefaultUserAuthenticationConverter {

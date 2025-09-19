@@ -242,6 +242,11 @@ public class FileStorageServiceImpl extends ServiceImpl<FileStorageMapper, FileS
         return fileHash;
     }
 
+    @Override
+    public String storeFile(MultipartFile multipartFile) {
+        return "";
+    }
+
     /**
      * 根据 MIME 类型分类文件夹
      */

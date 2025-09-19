@@ -13,7 +13,7 @@ import java.util.List;
  * 文件存储表 服务类
  * </p>
  *
- * @author 翱翔
+ * @author yzx
  * @since 2025-03-11
  */
 public interface IFileStorageService extends IService<FileStorage> {
@@ -28,6 +28,8 @@ public interface IFileStorageService extends IService<FileStorage> {
      * @create 2025/3/11
      **/
     String storeFile(String fileSystemType, MultipartFile file) throws IOException;
+
+    String storeFile(MultipartFile multipartFile);
 
     /**
      * 查询文件详情

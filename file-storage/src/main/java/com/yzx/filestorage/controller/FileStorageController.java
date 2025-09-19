@@ -15,7 +15,7 @@ import java.io.IOException;
  * 文件存储表 前端控制器
  * </p>
  *
- * @author 翱翔
+ * @author yzx
  * @since 2025-03-11
  */
 @RestController
@@ -26,7 +26,7 @@ public class FileStorageController {
 
     @PostMapping("/upload")
     public Result<String> uploadFile(@RequestParam("fileSystemType") String fileSystemType,
-                                                   @RequestParam("file") MultipartFile file) throws IOException {
+                                     @RequestParam("file") MultipartFile file) throws IOException {
         String fileHash = fileStorageService.storeFile(fileSystemType, file);
         return Result.success(fileHash);
     }
@@ -44,4 +44,10 @@ public class FileStorageController {
     public Result<FileDetailResponse> getFileDetail(@RequestParam("fileHash") String fileHash, @RequestParam("fileSystemType") String fileSystemType) {
         return Result.success(fileStorageService.getFileDetail(fileHash, fileSystemType));
     }
+
+    @PostMapping("/upload-to-minio")
+    public Result<String> uploadFileToMinio(@RequestParam("file") MultipartFile file) throws IOException {
+        return Result.success(fileStorageService.storeFile(file));
+    }
+
 }
